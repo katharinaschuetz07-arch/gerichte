@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Einfache Gerichte v1.9.5- Natalie</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0a0f14;
+            color: #b0c4de; 
+            font-family: 'Segoe UI', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .nav-top-btn {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            font-size: 0.6rem;
+            color: #94a3b8;
+            transition: all 0.2s;
+        }
+        .nav-top-btn.active {
+            border-color: #38bdf8;
+            color: white;
+            background-color: #1e293b;
+        }
+        .recipe-card {
+            background: linear-gradient(145deg, #0f172a, #070a0f);
+            border: 1px solid #1e293b;
+            border-left: 3px solid #38bdf8;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer; /* Zeigt an, dass man klicken kann */
+        }
+        .recipe-card:active {
+            background: #1e293b;
+        }
+        .bottom-nav-btn {
+            background-color: #111827;
+            color: #38bdf8;
+            border: 1px solid #1f2937;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            transition: all 0.2s;
+            height: 55px;
+        }
+        .bottom-nav-btn:active {
+            background-color: #38bdf8;
+            color: #0a0f14;
+        }
+        .btn-center {
+            border-color: #38bdf8;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <header class="text-center mb-4">
+        <h1 class="text-xl font-light tracking-widest text-white uppercase italic">Einfache Gerichte</h1>
+        <p class="text-[9px] text-sky-500 font-mono tracking-widest">VERSION 1.9.5 //</p>
+    </header>
+
+    <nav class="grid grid-cols-5 gap-1 mb-6">
+        <button onclick="setCategory('gemuese')" id="btn-gemuese" class="nav-top-btn py-3 rounded-none uppercase">Gemüse</button>
+        <button onclick="setCategory('fleisch')" id="btn-fleisch" class="nav-top-btn py-3 rounded-none uppercase">Fleisch</button>
+        <button onclick="setCategory('fisch')" id="btn-fisch" class="nav-top-btn py-3 rounded-none uppercase">Fisch</button>
+        <button onclick="setCategory('nudeln')" id="btn-nudeln" class="nav-top-btn py-3 rounded-none uppercase">Nudeln</button>
+        <button onclick="setCategory('dessert')" id="btn-dessert" class="nav-top-btn py-3 rounded-none uppercase">Dessert</button>
+    </nav>
+
+    <main class="flex-grow flex flex-col mb-6">
+        <div id="main-card" onclick="changeRecipe(1)" class="recipe-card p-8 shadow-2xl rounded-none">
+            <h2 id="recipe-title" class="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2 uppercase tracking-tight text-center">Willkommen</h2>
+            <p id="recipe-content" class="text-lg leading-relaxed italic text-slate-300 text-center">
+                Hier finden Sie einfache Gerichte von Nudel, Fleisch, Gemüse bis hin zu Dessert und Fischgerichten.
+            </p>
+            <p class="text-[8px] text-slate-500 text-center mt-4 uppercase tracking-widest">(Tippe auf die Karte für das nächste Gericht)</p>
+        </div>
+    </main>
+
+    <div class="flex gap-2 mb-4">
+        <button onclick="event.stopPropagation(); changeRecipe(-1)" class="bottom-nav-btn flex-1 rounded-none uppercase">Zurück</button>
+        <button onclick="event.stopPropagation(); goHome()" class="bottom-nav-btn btn-center flex-1 rounded-none uppercase">Startseite</button>
+        <button onclick="event.stopPropagation(); changeRecipe(1)" class="bottom-nav-btn flex-1 rounded-none uppercase">Vor</button>
+    </div>
+
+    <footer class="text-center py-2 border-t border-slate-900">
+        <p class="text-[8px] text-slate-500 uppercase tracking-tighter">(c) LernApp für Einfache Gerichte Natalie exklusive Natalie.</p>
+<p class="text-[8px] text-slate-500 uppercase tracking-tighter">Eine exklusive Edition für Nathalie.</p>
+    </footer>
+
+    <script>
+        const datenbank = {
+            gemuese: [
+                { title: "Zucchini Pfanne", text: "Zucchini würfeln, scharf anbraten, mit Salz, Pfeffer und Zitrone abschmecken." },
+                { title: "Honig-Möhren", text: "Möhrenstifte garen, Wasser abgießen, mit Honig und Butter glasieren." },
+                { title: "Ofen-Brokkoli", text: "Brokkoli-Röschen mit Öl und Salz mischen. Bei 200 Grad 15 Minuten rösten." },
+                { title: "Blumenkohl Muskat", text: "Blumenkohl weich kochen und mit Butter und viel Muskatnuss zerdrücken." },
+                { title: "Wirsing Rahm", text: "Wirsingstreifen in Butter dünsten und mit einem Schuss Sahne einkochen." },
+                { title: "Spinat Knoblauch", text: "Frischen Spinat in die Pfanne geben, bis er zusammenfällt. Knoblauch kurz mitdünsten." },
+                { title: "Paprika Express", text: "Paprikastreifen 5 Minuten in Kräuteröl braten, bis sie bissfest sind." },
+                { title: "Erbsen Butter", text: "Tiefkühl-Erbsen in wenig Wasser garen, abgießen und in Butter schwenken." },
+                { title: "Rotkohl Apfel", text: "Rotkohl mit Apfelstücken und einem Schluck Essig 30 Minuten sanft köcheln." },
+                { title: "Bohnen Speck", text: "Grüne Bohnen kochen und danach mit Speckwürfeln in der Pfanne schwenken." }
+            ],
+            fleisch: [
+                { title: "Hähnchen Natur", text: "Hähnchenbrust salzen und 6 Minuten pro Seite goldbraun braten." },
+                { title: "Entenbrust", text: "Haut kreuzweise einschneiden, auf der Hautseite knusprig braten, kurz wenden." },
+                { title: "Hackbällchen", text: "Gewürztes Hackfleisch zu Kugeln rollen und 10 Minuten rundherum braten." },
+                { title: "Rindersteak", text: "Scharf anbraten, dann 5 Minuten in Alufolie ruhen lassen für die Saftigkeit." },
+                { title: "Schweine Medaillons", text: "In Butter von beiden Seiten je 3 Minuten braten, erst danach salzen." },
+                { title: "Bacon knusprig", text: "Speckscheiben langsam erhitzen, bis sie im eigenen Fett kross werden." },
+                { title: "Entenkeule", text: "Im Ofen bei 160 Grad für 90 Minuten garen, bis das Fleisch weich ist." },
+                { title: "Puten Curry", text: "Putenstreifen anbraten, Currypulver dazu und mit Sahne ablöschen." },
+                { title: "Wiener Würstchen", text: "In heißem, nicht kochendem Wasser 5 Minuten ziehen lassen." },
+                { title: "Kassler Pfanne", text: "Kassler-Scheiben kurz von beiden Seiten erhitzen, damit sie saftig bleiben." }
+            ],
+            fisch: [
+                { title: "Lachsfilet", text: "Lachs auf der Hautseite 4 Minuten braten, wenden und 2 Minuten fertig garen." },
+                { title: "Fischstäbchen", text: "In reichlich Fett goldbraun braten und auf Papier abtropfen lassen." },
+                { title: "Zanderfilet", text: "Die Hautseite bemehlen, auf dieser Seite 5 Minuten braten, kurz wenden." },
+                { title: "Forelle Müllerin", text: "Ganze Forelle in Mehl wenden und in viel Butter von beiden Seiten braten." },
+                { title: "Garnelen Pfanne", text: "Garnelen mit Knoblauch 3 Minuten braten, bis sie rosa werden." },
+                { title: "Schollenfilet", text: "Kurz in Butter braten und mit reichlich Zitronensaft beträufeln." },
+                { title: "Thunfisch Steak", text: "Scharf von beiden Seiten je 1 Minute braten, innen sollte er rosa bleiben." },
+                { title: "Fischfrikadellen", text: "Fertige Frikadellen in der Pfanne bei mittlerer Hitze langsam erwärmen." },
+                { title: "Kabeljau Dämpfen", text: "Fisch über kochendem Wasser 8 Minuten garen, bis er weiß und fest ist." },
+                { title: "Matjes Hausfrauen", text: "Matjes mit Zwiebelringen, Apfelstücken und saurer Sahne kalt anrichten." }
+            ],
+            nudeln: [
+                { title: "Spaghetti Al Dente", text: "In viel Salzwasser kochen. Sobald sie bissfest sind, sofort abgießen." },
+                { title: "Pasta Pesto", text: "Gekochte Nudeln direkt mit Pesto und etwas Nudelwasser verrühren." },
+                { title: "Schinken Nudeln", text: "Nudeln mit Schinken und Ei in der Pfanne anbraten, bis das Ei stockt." },
+                { title: "Käse Nudeln", text: "Heiße Nudeln mit geriebenem Käse mischen, bis der Käse Fäden zieht." },
+                { title: "Spaghetti Aglio", text: "Viel Knoblauch in Olivenöl dünsten und unter die Spaghetti mischen." },
+                { title: "Tomaten Sauce", text: "Passierte Tomaten mit Kräutern aufkochen und über die Nudeln geben." },
+                { title: "Tortellini Sahne", text: "Gefüllte Nudeln kochen und in einer Sahne-Schinken-Sauce schwenken." },
+                { title: "Nudel Auflauf", text: "Nudeln mit Sauce und Käse im Ofen überbacken, bis die Kruste braun ist." },
+                { title: "Zitronen Pasta", text: "Nudeln mit Zitronenschale, Saft und Olivenöl frisch vermengen." },
+                { title: "Spätzle Pfanne", text: "Spätzle in Butter anbraten, bis sie leicht goldbraun und knusprig sind." }
+            ],
+            dessert: [
+                { title: "Grießbrei Zimt", text: "Milch mit Grieß aufkochen, quellen lassen und mit Zucker-Zimt bestreuen." },
+                { title: "Obst Quark", text: "Quark mit etwas Sprudelwasser glatt rühren und frisches Obst unterheben." },
+                { title: "Milchreis", text: "Rundkornreis in Milch bei kleiner Hitze 30 Minuten weich köcheln." },
+                { title: "Schoko Banane", text: "Banane längs einschneiden, Schokostückchen rein und im Ofen schmelzen." },
+                { title: "Joghurt Honig", text: "Griechischer Joghurt mit Honig und Walnüssen garnieren." },
+                { title: "Beerengrütze", text: "Rote Beeren mit Saft aufkochen und mit Vanillesauce servieren." },
+                { title: "Vanille Pudding", text: "Milch mit Puddingpulver aufkochen und abkühlen lassen." },
+                { title: "Apfelkompott", text: "Apfelstücke mit wenig Wasser, Zucker und Zimt weich kochen." },
+                { title: "Eiskaffee", text: "Kalter Kaffee mit einer Kugel Vanilleeis und einer Haube Sahne." },
+                { title: "Waffeln Fix", text: "Waffelteig im Eisen goldbraun backen und mit Puderzucker bestreuen." }
+            ]
+        };
+
+        let currentCategory = 'gemuese';
+        let currentIndex = -1;
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            currentIndex = -1;
+            document.querySelectorAll('.nav-top-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + cat).classList.add('active');
+            
+            document.getElementById('recipe-title').innerText = "Kategorie: " + cat.toUpperCase();
+            document.getElementById('recipe-content').innerText = "Tippe auf die Karte oder 'Vor', um zu blättern.";
+            window.speechSynthesis.cancel();
+        }
+
+        function goHome() {
+            currentIndex = -1;
+            document.getElementById('recipe-title').innerText = "Willkommen";
+            document.getElementById('recipe-content').innerText = "Hier finden Sie einfache Gerichte von Nudel, Fleisch, Gemüse bis hin zu Dessert und Fischgerichten.";
+            window.speechSynthesis.cancel();
+        }
+
+        function showRecipe(index) {
+            const rezepte = datenbank[currentCategory];
+            if (index < 0) index = rezepte.length - 1;
+            if (index >= rezepte.length) index = 0;
+            
+            currentIndex = index;
+            const recipe = rezepte[currentIndex];
+            
+            document.getElementById('recipe-title').innerText = recipe.title;
+            document.getElementById('recipe-content').innerText = recipe.text;
+            
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(recipe.text);
+            utterance.lang = 'de-DE';
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function changeRecipe(direction) {
+            showRecipe(currentIndex + direction);
+        }
+
+        // Startzustand
+        goHome();
+    </script>
+</body>
+</html>
+
